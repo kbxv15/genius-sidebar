@@ -1,0 +1,324 @@
+/* Genius tab in YouTube Music's player-page sidebar */
+
+/* ── the tab, next to Up next / Lyrics / Related ── */
+.gl-tab {
+  flex: 1 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  height: 48px;
+  padding: 0 12px;
+  box-sizing: border-box;
+  color: var(--gl-tab-off, rgba(255, 255, 255, 0.7));
+  font: 500 14px/1 Roboto, Arial, sans-serif;
+  text-transform: uppercase;
+  white-space: nowrap;
+  cursor: pointer;
+  user-select: none;
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
+}
+.gl-tab:hover { color: var(--gl-tab-on, #fff); }
+.gl-tab:focus-visible { box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.35); border-radius: 4px; }
+.gl-tab.gl-on { color: var(--gl-tab-on, #fff); }
+.gl-tab.gl-on::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 2px;
+  background: currentColor;
+}
+
+.gl-tab svg { display: none; width: 22px; height: 22px; fill: none; }
+
+/* narrow sidebar: tighter tabs, then an icon-only Genius tab */
+#side-panel.gl-tight tp-yt-paper-tab,
+#side-panel.gl-tight .gl-tab {
+  padding: 0 6px !important;
+  font-size: 13px !important;
+  letter-spacing: 0 !important;
+  flex-shrink: 1 !important;
+  min-width: 0 !important;
+}
+#side-panel.gl-tighter tp-yt-paper-tab { padding: 0 4px !important; font-size: 12px !important; }
+#side-panel.gl-tighter .gl-tab { flex: 0 0 auto !important; padding: 0 10px !important; }
+#side-panel.gl-tighter .gl-tab span { display: none; }
+#side-panel.gl-tighter .gl-tab svg { display: block; }
+
+/* While the Genius tab is open it takes the sidebar's content area; YouTube Music's own tab stays
+   loaded underneath and comes back as soon as one of its tabs is clicked. */
+#side-panel.gl-active > :not(tp-yt-paper-tabs):not(#gl-panel) {
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+#side-panel.gl-active tp-yt-paper-tab.iron-selected { color: var(--gl-tab-off, rgba(255, 255, 255, 0.7)) !important; }
+#side-panel.gl-active tp-yt-paper-tabs #selectionBar { visibility: hidden !important; }
+
+/* ── the panel ── */
+#gl-panel {
+  display: none;
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  top: 49px;
+  z-index: 3;
+  color: #fff;
+  font-family: Roboto, Arial, sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+}
+#side-panel.gl-active #gl-panel { display: block; }
+#gl-panel .gl-scroll {
+  height: 100%;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 12px 8px 32px;
+  box-sizing: border-box;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.25) transparent;
+}
+#gl-panel a { color: inherit; }
+#gl-panel button { font: inherit; }
+#gl-panel .gl-muted { color: rgba(255, 255, 255, 0.6); }
+#gl-panel .gl-pad { padding: 4px 8px; }
+
+/* header: Genius art, title, artist */
+#gl-panel .gl-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 4px 8px 14px;
+}
+#gl-panel .gl-art {
+  width: 56px;
+  height: 56px;
+  border-radius: 4px;
+  object-fit: cover;
+  flex: none;
+  background: rgba(255, 255, 255, 0.08);
+}
+#gl-panel .gl-meta { min-width: 0; flex: 1; }
+#gl-panel .gl-title {
+  display: block;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.3;
+  text-decoration: none;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+#gl-panel .gl-title:hover { text-decoration: underline; }
+#gl-panel .gl-meta .gl-muted { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+#gl-panel .gl-link {
+  background: none;
+  border: 0;
+  padding: 6px 4px;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 12px;
+  cursor: pointer;
+  white-space: nowrap;
+  flex: none;
+}
+#gl-panel .gl-link:hover { color: #fff; text-decoration: underline; }
+
+/* Lyrics | Notes | About */
+#gl-panel .gl-seg { display: flex; gap: 8px; padding: 0 8px 16px; }
+#gl-panel .gl-seg-btn {
+  border: 0;
+  border-radius: 8px;
+  padding: 6px 12px;
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+}
+#gl-panel .gl-seg-btn:hover { background: rgba(255, 255, 255, 0.2); }
+#gl-panel .gl-seg-btn.on { background: #fff; color: #030303; }
+
+/* lyrics */
+#gl-panel .gl-lyrics { padding: 0 8px; font-size: 16px; line-height: 1.65; }
+#gl-panel .gl-block { margin-bottom: 1.2em; overflow-wrap: anywhere; }
+#gl-panel .gl-section { color: rgba(255, 255, 255, 0.6); font-size: 14px; font-weight: 500; }
+#gl-panel .gl-ref {
+  display: inline;
+  font: inherit;
+  line-height: inherit;
+  color: inherit;
+  text-align: inherit;
+  padding: 1px 0;
+  margin: 0;
+  border: 0;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.12);
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+  cursor: pointer;
+}
+#gl-panel .gl-ref:hover { background: rgba(255, 255, 100, 0.28); }
+#gl-panel .gl-ref[aria-expanded='true'] { background: #ffff64; color: #111; }
+#gl-panel .gl-ref.gl-ref-empty { background: none; cursor: text; }
+#gl-panel .gl-ref:focus-visible { outline: 2px solid #ffff64; outline-offset: 1px; }
+
+/* a note */
+#gl-panel .gl-note {
+  display: block;
+  margin: 8px 0 14px;
+  padding: 12px 14px;
+  border-left: 3px solid #ffff64;
+  border-radius: 0 8px 8px 0;
+  background: rgba(255, 255, 255, 0.08);
+  font-size: 14px;
+  line-height: 1.55;
+  color: rgba(255, 255, 255, 0.92);
+}
+#gl-panel .gl-note.gl-unreviewed { border-left-color: rgba(255, 255, 255, 0.35); }
+#gl-panel .gl-note-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
+  font-size: 12px;
+}
+#gl-panel .gl-badge {
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: rgba(255, 255, 100, 0.16);
+  color: #ffff9a;
+  font-weight: 500;
+}
+#gl-panel .gl-unreviewed .gl-badge { background: rgba(255, 255, 255, 0.1); color: rgba(255, 255, 255, 0.75); }
+#gl-panel .gl-votes { margin-left: auto; color: rgba(255, 255, 255, 0.6); }
+#gl-panel .gl-out {
+  display: inline-block;
+  margin-top: 6px;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.6);
+  text-decoration: none;
+}
+#gl-panel .gl-out:hover { color: #fff; text-decoration: underline; }
+
+/* rich text from Genius (notes, About) */
+#gl-panel .gl-rich p { margin: 0 0 0.75em; }
+#gl-panel .gl-rich p:last-child { margin-bottom: 0; }
+#gl-panel .gl-rich a { color: #ffff9a; text-decoration: none; }
+#gl-panel .gl-rich a:hover { text-decoration: underline; }
+#gl-panel .gl-rich img { display: block; max-width: 100%; height: auto; margin: 8px 0; border-radius: 4px; }
+#gl-panel .gl-rich blockquote {
+  margin: 0.5em 0;
+  padding-left: 10px;
+  border-left: 2px solid rgba(255, 255, 255, 0.3);
+  color: rgba(255, 255, 255, 0.8);
+}
+#gl-panel .gl-rich ul, #gl-panel .gl-rich ol { margin: 0.4em 0 0.75em; padding-left: 1.4em; }
+#gl-panel .gl-rich h4 { margin: 1em 0 0.4em; font-size: 14px; }
+#gl-panel .gl-rich hr { border: 0; border-top: 1px solid rgba(255, 255, 255, 0.15); margin: 1em 0; }
+#gl-panel .gl-rich code, #gl-panel .gl-rich pre { font-family: ui-monospace, Menlo, monospace; font-size: 13px; white-space: pre-wrap; }
+
+/* Notes list */
+#gl-panel .gl-notes { padding: 0 8px; }
+#gl-panel .gl-note-item { margin-bottom: 18px; }
+#gl-panel .gl-quote {
+  margin: 0 0 6px;
+  padding: 0;
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.5;
+  color: #fff;
+  white-space: pre-line;
+}
+#gl-panel .gl-note-item .gl-note { margin-top: 0; }
+
+/* About */
+#gl-panel .gl-about { font-size: 15px; line-height: 1.6; color: rgba(255, 255, 255, 0.9); }
+#gl-panel .gl-facts {
+  margin-top: 20px;
+  display: grid;
+  grid-template-columns: minmax(90px, max-content) 1fr;
+  gap: 8px 16px;
+  font-size: 13px;
+}
+#gl-panel .gl-fact { display: contents; }
+#gl-panel .gl-fact span { color: rgba(255, 255, 255, 0.6); }
+#gl-panel .gl-fact b { font-weight: 500; }
+
+/* picker */
+#gl-panel .gl-search {
+  width: 100%;
+  box-sizing: border-box;
+  margin: 8px 0 12px;
+  padding: 10px 12px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+  font: inherit;
+  outline: none;
+}
+#gl-panel .gl-search:focus { border-color: rgba(255, 255, 255, 0.5); }
+#gl-panel .gl-picks { display: flex; flex-direction: column; gap: 2px; }
+#gl-panel .gl-pick {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 6px;
+  border: 0;
+  border-radius: 6px;
+  background: none;
+  color: #fff;
+  text-align: left;
+  cursor: pointer;
+}
+#gl-panel .gl-pick:hover { background: rgba(255, 255, 255, 0.1); }
+#gl-panel .gl-pick img, #gl-panel .gl-pick-ph {
+  width: 40px;
+  height: 40px;
+  border-radius: 4px;
+  object-fit: cover;
+  flex: none;
+  background: rgba(255, 255, 255, 0.08);
+}
+#gl-panel .gl-pick > span { display: flex; flex-direction: column; min-width: 0; }
+#gl-panel .gl-pick b, #gl-panel .gl-pick small { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+#gl-panel .gl-pick b { font-weight: 500; }
+#gl-panel .gl-pick small { color: rgba(255, 255, 255, 0.6); font-size: 12px; }
+#gl-panel .gl-picker > .gl-link { margin-top: 8px; }
+
+/* buttons, loading, footer */
+#gl-panel .gl-btn {
+  margin-top: 8px;
+  padding: 8px 16px;
+  border: 0;
+  border-radius: 18px;
+  background: #fff;
+  color: #030303;
+  font-weight: 500;
+  cursor: pointer;
+}
+#gl-panel .gl-loading { display: flex; align-items: center; gap: 12px; padding: 24px 8px; }
+#gl-panel .gl-spinner {
+  width: 20px;
+  height: 20px;
+  margin: 8px 0;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-top-color: #fff;
+  animation: gl-spin 0.8s linear infinite;
+  flex: none;
+}
+@keyframes gl-spin { to { transform: rotate(360deg); } }
+#gl-panel .gl-credit {
+  margin: 24px 8px 0;
+  padding-top: 12px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.5);
+}
+#gl-panel .gl-credit a { color: rgba(255, 255, 255, 0.75); }
